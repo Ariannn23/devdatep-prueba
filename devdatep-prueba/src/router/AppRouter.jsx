@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
+import MainPage from "../pages/MainPage";
 
 const AppRouter = () => {
     return  (
         <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<MainPage />} />
         </Routes>
     )
 }
