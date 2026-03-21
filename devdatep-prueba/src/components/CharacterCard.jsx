@@ -1,10 +1,25 @@
-const CharacterCard = ({ character }) => {
+import { FaUser, FaDragon } from "react-icons/fa"
+import { motion } from "framer-motion"
+
+const CharacterCard = ({ character, index }) => {
   return (
-    <div className="bg-light rounded-lg shadow-md p-4 border-2 border-primary hover:border-secondary transition-colors">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      whileHover={{ scale: 1.05 }}
+      className="bg-red_base rounded-lg shadow-lg p-4 border-2 border-red_light hover:shadow-2xl cursor-pointer"
+    >
       <img src={character.image} alt={character.name} className="w-full h-48 object-contain rounded-lg" />
-      <h2 className="text-lg font-bold mt-2 text-secondary">{character.name}</h2>
-      <p className="text-accent">{character.race}</p>
-    </div>
+      <div className="flex items-center gap-2 mt-2">
+        <FaUser className="text-cream_base" />
+        <h2 className="text-lg font-bold font-body text-cream_light">{character.name}</h2>
+      </div>
+      <div className="flex items-center gap-2 mt-1">
+        <FaDragon className="text-cream_base" />
+        <p className="font-body text-cream_base">{character.race}</p>
+      </div>
+    </motion.div>
   )
 }
 
