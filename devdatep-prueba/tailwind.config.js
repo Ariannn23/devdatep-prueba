@@ -20,7 +20,7 @@ export default {
         orange_dark: "#c47d0e",
         orange_base: "#f5a623",
         orange_light: "#f7bc57",
-        orange_soft: "#fad48b",
+          
 
         // Verdes
         green_dark: "#2d4f2a",
@@ -31,6 +31,7 @@ export default {
         // Rojos
         red_dark: "#5c1f1f",
         red_base: "#8b3030",
+        red_base_light: "#a14a4a",
         red_light: "#b85050",
         red_soft: "#d48080",
 
@@ -41,7 +42,7 @@ export default {
         dark_light: "#3d3d3d",
 
         // Blancos
-        white: "#ffffff",
+        white: "#fff",
       },
     },
   },
