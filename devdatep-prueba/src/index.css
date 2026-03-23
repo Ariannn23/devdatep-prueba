@@ -5,8 +5,3 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-red_dark;
-  }
-}
