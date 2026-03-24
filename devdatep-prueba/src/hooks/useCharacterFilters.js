@@ -1,28 +1,22 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 
-const useCharacterFilters = (characters = []) => {
-  const [search, setSearch] = useState("");
+const useCharacterFilters = ({ paginatedItems, allItems, debouncedSearch }) => {
   const [race, setRace] = useState("");
 
-  const filteredCharacters = useMemo(() => {
-    return characters.filter((character) => {
-      const matchesSearch = character.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      const matchesRace = race === "" || character.race === race;
-      return matchesSearch && matchesRace;
-    });
-  }, [characters, search, race]);
-
-  const handleSearch = (e) => setSearch(e.target.value);
   const handleRaceChange = (selectedRace) => setRace(selectedRace);
 
+  const characters = race || debouncedSearch
+    ? (allItems || []).filter(
+        (c) =>
+          (race === "" || c.race === race) &&
+          c.name.toLowerCase().includes(debouncedSearch.toLowerCase()),
+      )
+    : paginatedItems || [];
+
   return {
-    search,
     race,
-    handleSearch,
     handleRaceChange,
-    filteredCharacters,
+    characters,
   };
 };
 
