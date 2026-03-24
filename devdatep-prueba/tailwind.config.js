@@ -13,7 +13,8 @@ export default {
       colors: {
         // Cremas
         cream_dark: "#d4ceb8",
-        cream_base: "#e8e2cc",
+        cream_darker: "#b8b4a2",
+        cream_base: "#e8e2cc",  
         cream_light: "#f5f0dc",
 
         // Naranjas
