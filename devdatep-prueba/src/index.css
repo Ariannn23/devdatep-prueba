@@ -5,3 +5,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thumb-orange_base::-webkit-scrollbar-thumb {
+    background-color: #f7bc57;
+    border-radius: 20px;
+  }
+}
+

@@ -4,6 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaDragon, FaBolt, FaDna, FaVenusMars } from "react-icons/fa";
 import Skeleton from "../components/ui/Skeleton";
+import CommentSection from "../components/CommentSection";
 
 const CharacterDetail = () => {
   const { id } = useParams();
@@ -55,7 +56,6 @@ const CharacterDetail = () => {
           animate={{ y: 0, opacity: 1 }}
           className="bg-red_base rounded-3xl overflow-hidden border-2 border-red_light shadow-2xl flex flex-col md:flex-row"
         >
-          {/* Image Section */}
           <div className="w-full md:w-1/2 bg-gradient-to-br from-red_light/20 to-transparent p-12 flex justify-center items-center">
             <motion.img
               initial={{ scale: 0.8 }}
@@ -66,20 +66,23 @@ const CharacterDetail = () => {
             />
           </div>
 
-          {/* Info Section */}
           <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col">
             <div className="mb-6">
               <h1 className="text-5xl md:text-6xl font-title font-bold text-cream_light mb-2 drop-shadow-md">
                 {character.name}
               </h1>
-              <div className="flex items-center gap-3 text-orange_base font-body text-xl italic bg-red_dark/30 self-start px-4 py-1 rounded-full border border-orange_base/20">
+              <div className="flex items-center gap-3 text-cream_dark font-body text-xl italic bg-red_dark/30 self-start px-4 py-1 rounded-full border border-orange_base/20">
                 <FaDragon /> {character.race}
               </div>
             </div>
 
-            <p className="text-cream_base font-body text-lg leading-relaxed mb-8 bg-red_dark/20 p-6 rounded-2xl border border-red_light/10">
-              {character.description}
-            </p>
+            <div className="bg-red_dark/20 rounded-lg border border-red_light/10 mb-8 p-1">
+              <div className="max-h-[300px] overflow-y-auto p-5 scrollbar-thin scrollbar-thumb-orange_base scrollbar-track-transparent">
+                <p className="text-cream_base font-body text-lg leading-relaxed">
+                  {character.description}
+                </p>
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-6 mt-auto">
               <div className="bg-red_dark/40 p-4 rounded-xl border border-red_light/20 flex flex-col items-center">
@@ -106,6 +109,7 @@ const CharacterDetail = () => {
             )}
           </div>
         </motion.div>
+        <CommentSection characterId={id} />
       </div>
     </div>
   );
