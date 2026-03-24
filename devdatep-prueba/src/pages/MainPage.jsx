@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaChevronLeft, FaChevronRight, FaTimesCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 import CharacterCard from "../components/CharacterCard";
-import Skeleton from "../components/ui/Skeleton";
+import CharacterCardSkeleton from "../components/CharacterCardSkeleton";
 import useCharacters, {
   useAllRaces,
   useAllCharacters,
@@ -100,27 +100,27 @@ const MainPage = () => {
           {showSkeleton ? (
             Array(8)
               .fill(0)
-              .map((_, i) => <Skeleton key={i} index={i} />)
+              .map((_, i) => <CharacterCardSkeleton key={i} index={i} />)
           ) : characters.length === 0 ? (
             <div className="col-span-4 flex flex-col items-center justify-center py-20 gap-4">
               <FaTimesCircle className="text-red_base text-6xl drop-shadow-lg" />
-              <p className="text-cream_light font-body text-xl text-center">
-                No se encontraron personajes
-              </p>
-              <p className="text-cream_light/50 font-body text-sm text-center">
-                Intenta con otro nombre o raza
-              </p>
-            </div>
-          ) : (
-            characters.map((character, index) => (
-              <CharacterCard
-                key={character.id}
-                character={character}
-                index={index}
-              />
-            ))
-          )}
-        </div>
+                <p className="text-cream_light font-body text-xl text-center">
+                  No se encontraron personajes
+                </p>
+                <p className="text-cream_light/50 font-body text-sm text-center">
+                  Intenta con otro nombre o raza
+                </p>
+              </div>
+            ) : (
+              characters.map((character, index) => (
+                <CharacterCard
+                  key={character.id}
+                  character={character}
+                  index={index}
+                />
+              ))
+            )}
+          </div>
 
         {!race && (data?.links?.next || data?.links?.prev) && (
           <div className="flex justify-center items-center gap-6 mt-10 mb-6">
