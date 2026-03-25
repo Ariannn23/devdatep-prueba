@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export const useComments = (characterId) => {
   const [comments, setComments] = useState([]);
@@ -21,17 +22,20 @@ export const useComments = (characterId) => {
       date: new Date().toLocaleDateString()
     };
     saveComments([newComment, ...comments]);
+    toast.success("¡Comentario publicado!");
   };
 
   const updateComment = (data) => {
     const newComments = comments.map(c => c.id === editingId ? { ...c, ...data } : c);
     saveComments(newComments);
     setEditingId(null);
+    toast.success("Opinión actualizada");
   };
 
   const deleteComment = (id) => {
     const newComments = comments.filter(c => c.id !== id);
     saveComments(newComments);
+    toast.info("Comentario eliminado");
   };
 
   const startEditing = (id) => setEditingId(id);

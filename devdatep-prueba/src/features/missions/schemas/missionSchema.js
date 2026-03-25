@@ -9,10 +9,10 @@ export const missionSchema = z.object({
     .string()
     .min(10, "Describe la misión con al menos 10 caracteres")
     .max(200, "La descripción es demasiado larga"),
-  assignedCharacter: z
+  assignedCharacter: z.coerce
     .string()
     .min(1, "Debes asignar un guerrero a la misión"),
-  country: z
+  country: z.coerce
     .string()
     .min(1, "Debes seleccionar una región de despliegue"),
   difficulty: z.enum(["Bajo", "Medio", "Alto", "Extremo"], {

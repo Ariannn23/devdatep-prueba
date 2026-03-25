@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { missionService } from "../services/missionService";
 
 export const useMissionsDashboard = () => {
@@ -23,18 +24,31 @@ export const useMissionsDashboard = () => {
       editingMission
         ? missionService.update(editingMission.id, data)
         : missionService.create(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["missions"] });
+      const message = editingMission 
+        ? "Misión actualizada con éxito" 
+        : "¡Nueva misión iniciada!";
+      toast.success(message, {
+        description: `Objetivo: ${data.title}`
+      });
       setIsFormOpen(false);
       setEditingMission(null);
     },
+    onError: () => {
+      toast.error("Error al procesar la misión");
+    }
   });
 
   const deleteMutation = useMutation({
     mutationFn: missionService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["missions"] });
+      toast.info("Misión eliminada del radar");
     },
+    onError: () => {
+      toast.error("No se pudo eliminar la misión");
+    }
   });
 
   const handleEdit = (mission) => {
