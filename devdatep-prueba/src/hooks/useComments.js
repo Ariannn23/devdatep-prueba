@@ -1,19 +1,14 @@
 import { useState, useEffect } from "react";
 
-/**
- * Custom hook to manage Battle Comments CRUD with localStorage
- */
 export const useComments = (characterId) => {
   const [comments, setComments] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
-  // Load comments
   useEffect(() => {
     const saved = localStorage.getItem(`comments-${characterId}`);
     if (saved) setComments(JSON.parse(saved));
   }, [characterId]);
 
-  // Save/Sync comments
   const saveComments = (newComments) => {
     setComments(newComments);
     localStorage.setItem(`comments-${characterId}`, JSON.stringify(newComments));
