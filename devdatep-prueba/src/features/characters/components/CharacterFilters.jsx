@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 import { FaSearch, FaTimes, FaFilter, FaChevronDown } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import Skeleton from "../../../components/ui/Skeleton";
 
-const CharacterFilters = ({ 
+const CharacterFilters = forwardRef(({ 
   search, 
   setSearch, 
   race, 
   setRace, 
   allRaces, 
   isLoadingRaces 
-}) => {
+}, ref) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -34,18 +34,18 @@ const CharacterFilters = ({
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-8">
       <div className="flex-1 relative group">
-        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-red_base group-focus-within:text-orange_base transition-colors" />
+        <FaSearch className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${search ? 'text-orange_light' : 'text-red_base group-focus-within:text-orange_light'}`} />
         <input
           type="text"
           placeholder="Buscar guerrero..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-cream_light text-red_dark border-2 border-red_base rounded-2xl pl-12 pr-12 py-4 font-bold focus:outline-none focus:border-orange_base transition-all placeholder:text-red_dark/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]"
+          className="w-full bg-cream_light text-red_dark border-2 border-red_base rounded-2xl pl-12 pr-12 py-4 font-bold focus:outline-none focus:border-orange_light transition-all placeholder:text-red_dark/30 shadow-[0_10px_30px_rgba(0,0,0,0.2)]"
         />
         {search && (
           <button 
             onClick={clearSearch}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-red_base hover:text-red_dark hover:bg-red_light/10 rounded-full transition-all"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-orange_light hover:text-red_dark hover:bg-red_light/10 rounded-full transition-all"
           >
             <FaTimes size={14} />
           </button>
@@ -59,11 +59,13 @@ const CharacterFilters = ({
           <>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full h-full bg-cream_light text-red_dark border-2 border-red_base rounded-2xl pl-12 pr-4 py-4 font-bold flex items-center justify-between hover:bg-white transition-all shadow-lg text-left"
+              className={`w-full h-full bg-cream_light border-2 rounded-2xl pl-12 pr-4 py-4 font-bold flex items-center justify-between hover:bg-cream_base transition-all shadow-lg text-left text-red_dark ${
+                isDropdownOpen || race ? 'border-orange_light' : 'border-red_base'
+              }`}
             >
-              <FaFilter className="absolute left-4 top-1/2 -translate-y-1/2 text-red_base" />
+              <FaFilter className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${isDropdownOpen || race ? 'text-orange_light' : 'text-red_base'}`} />
               <span className="truncate">{race || "Todas las razas"}</span>
-              <FaChevronDown className={`text-red_base transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              <FaChevronDown className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-orange_light' : 'text-red_base'}`} />
             </button>
 
             <AnimatePresence>
@@ -72,23 +74,27 @@ const CharacterFilters = ({
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute z-50 w-full mt-2 bg-cream_light border-2 border-red_base rounded-2xl shadow-2xl overflow-hidden py-2"
+                  className="absolute z-50 w-full mt-2 bg-cream_light border-2 border-red_base rounded-2xl shadow-2xl overflow-hidden p-1"
                 >
-                  <button
-                    onClick={() => handleRaceSelect("")}
-                    className={`w-full px-6 py-3 text-left font-bold text-sm transition-colors ${!race ? 'bg-red_base text-cream_light' : 'text-red_dark hover:bg-red_light/10'}`}
-                  >
-                    Todas las razas
-                  </button>
-                  {allRaces.filter(r => r !== "").map((r) => (
+                  <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-orange_base p-1 flex flex-col gap-1">
                     <button
-                      key={r}
-                      onClick={() => handleRaceSelect(r)}
-                      className={`w-full px-6 py-3 text-left font-bold text-sm transition-colors ${race === r ? 'bg-red_base text-cream_light' : 'text-red_dark hover:bg-red_light/10'}`}
+                      type="button"
+                      onClick={() => handleRaceSelect("")}
+                      className={`w-full text-left px-4 py-3 transition-all rounded-xl font-bold text-sm ${!race ? 'bg-red_base text-cream_light' : 'text-red_dark hover:bg-orange_base/10'}`}
                     >
-                      {r}
+                      Todas las razas
                     </button>
-                  ))}
+                    {allRaces.filter(r => r !== "").map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => handleRaceSelect(r)}
+                        className={`w-full text-left px-4 py-3 transition-all rounded-xl font-bold text-sm ${race === r ? 'bg-red_base text-cream_light' : 'text-red_dark hover:bg-orange_base/10'}`}
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -97,6 +103,6 @@ const CharacterFilters = ({
       </div>
     </div>
   );
-};
+});
 
 export default CharacterFilters;

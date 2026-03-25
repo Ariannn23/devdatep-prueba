@@ -71,7 +71,7 @@ const CharacterDetail = () => {
               <h1 className="text-5xl md:text-6xl font-title font-black text-cream_light mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] uppercase tracking-tighter">
                 {character.name}
               </h1>
-              <div className="flex items-center gap-3 text-cream_dark font-body text-xl italic bg-red_dark/30 self-start px-4 py-1 rounded-full border border-orange_base/20">
+              <div className="flex items-center gap-3 text-cream_light font-body text-xl italic bg-red_dark/30 self-start px-4 py-1 rounded-full border border-orange_base/20">
                 <FaDragon /> {character.race}
               </div>
             </div>

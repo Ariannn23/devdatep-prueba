@@ -6,6 +6,7 @@ const useCharacters = (page = 1, name = "") => {
     queryKey: ["characters", page, name],
     queryFn: () => getCharacters(page, name),
     placeholderData: (previousData) => previousData,
+    staleTime: 1000 * 60 * 5, // 5 min cache persistence
   });
 };
 

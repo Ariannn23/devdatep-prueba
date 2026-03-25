@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { missionService } from "../features/missions/services/missionService";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,24 +9,26 @@ import Skeleton from "../components/ui/Skeleton";
 import { FaPlus, FaTimes, FaFistRaised, FaChevronLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+import useCharacters, { useAllCharacters } from "../features/characters/hooks/useCharacters";
+
 const MissionsPage = () => {
   const queryClient = useQueryClient();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingMission, setEditingMission] = useState(null);
+  const isFirstMount = useRef(true);
+
+  useEffect(() => {
+    isFirstMount.current = false;
+  }, []);
 
   const { data: missions = [], isLoading } = useQuery({
     queryKey: ["missions"],
-    queryFn: missionService.getAll
+    queryFn: missionService.getAll,
+    staleTime: 1000 * 60 * 5 // 5 min cache
   });
 
-  const { data: characters = [] } = useQuery({
-    queryKey: ["characters"],
-    queryFn: async () => {
-      const res = await fetch("https://dragonball-api.com/api/characters?limit=100");
-      const data = await res.json();
-      return data.items || [];
-    }
-  });
+  const { data: allCharacters } = useAllCharacters();
+  const characters = allCharacters?.items || [];
 
   const mutation = useMutation({
     mutationFn: (data) => 
@@ -54,7 +56,12 @@ const MissionsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-red_dark text-cream_light p-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="min-h-screen bg-red_dark text-cream_light p-6"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-12">
           <div className="flex items-center gap-4">
@@ -62,10 +69,10 @@ const MissionsPage = () => {
               <FaChevronLeft className="text-cream_light" />
             </Link>
             <h1 className="text-4xl font-title font-black text-cream_light flex items-center gap-3 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
-              <FaFistRaised className="text-cream_light]" /> Combates Pendientes
+              <FaFistRaised className="text-cream_light" /> Combates Pendientes
             </h1>
           </div>
-          {isLoading ? (
+          {isLoading && missions.length === 0 ? (
             <Skeleton className="h-12 w-40 rounded-xl" />
           ) : (
             <button 
@@ -107,7 +114,7 @@ const MissionsPage = () => {
             className={`${isFormOpen ? "lg:col-span-8" : "lg:col-span-12"} grid grid-cols-1 md:grid-cols-2 ${isFormOpen ? "" : "xl:grid-cols-3"} gap-6`}
           >
             <AnimatePresence mode="popLayout">
-              {isLoading ? (
+              {isLoading && missions.length === 0 ? (
                 Array.from({ length: 6 }).map((_, i) => <MissionCardSkeleton key={`skeleton-${i}`} index={i} />)
               ) : missions.length === 0 ? (
                 <motion.div 
@@ -119,14 +126,18 @@ const MissionsPage = () => {
                     <p className="text-cream_light/20 font-bold uppercase tracking-widest text-sm">No hay misiones activas en el radar</p>
                 </motion.div>
               ) : (
-                missions.map(mission => (
+                missions.map((mission, index) => (
                   <motion.div
                     key={mission.id}
                     layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    initial={(isFirstMount.current && !isLoading) ? false : { opacity: 0, y: 30, scale: 0.9 }}
+                    animate={{ 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: { delay: index * 0.1, type: "spring", stiffness: 100 }
+                    }}
                     exit={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
-                    transition={{ duration: 0.2 }}
                   >
                     <MissionCard 
                       mission={mission}
@@ -140,7 +151,7 @@ const MissionsPage = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

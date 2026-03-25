@@ -23,12 +23,6 @@ export default {
         orange_light: "#f7bc57",
           
 
-        // Verdes
-        green_dark: "#2d4f2a",
-        green_base: "#4a7c46",
-        green_light: "#6da668",
-        green_soft: "#9fcc9b",
-
         // Rojos
         red_dark: "#5c1f1f",
         red_base: "#8b3030",

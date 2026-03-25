@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -22,6 +22,11 @@ const MainPage = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [minLoadDone, setMinLoadDone] = useState(false);
+  const isFirstMount = useRef(true);
+
+  useEffect(() => {
+    isFirstMount.current = false;
+  }, []);
 
   const { data: allRaces = [], isLoading: isLoadingRaces } = useAllRaces();
   const { data: allData } = useAllCharacters();
@@ -53,10 +58,15 @@ const MainPage = () => {
   };
 
   const showSkeleton =
-    !debouncedSearch && (isLoading || isFetching || !minLoadDone);
+    !debouncedSearch && isLoading && !data;
 
   return (
-    <div className="min-h-screen bg-red_dark">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="min-h-screen bg-red_dark"
+    >
       <div className="container mx-auto p-4 flex flex-col min-h-screen">
         <div className="flex justify-between items-center mb-10">
             <h1 className="text-5xl md:text-6xl font-title font-black text-cream_light tracking-tighter drop-shadow-[0_0_15px_rgba(161,74,74,0.5)] flex flex-wrap gap-x-4">
@@ -122,40 +132,48 @@ const MainPage = () => {
                 key={character.id}
                 character={character}
                 index={index}
+                isLoading={isLoading}
+                isFirstMount={isFirstMount.current}
               />
             ))
           )}
         </div>
 
         {!race && (data?.links?.next || data?.links?.prev) && (
-          <div className="flex justify-center items-center gap-6 mt-10 mb-6">
+          <div className="flex justify-center items-center gap-8 mt-12 mb-8 bg-red_dark/30 p-4 rounded-[3rem] border-2 border-red_light/5 backdrop-blur-sm self-center">
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={page > 1 ? { scale: 1.1, x: -5 } : {}}
+              whileTap={page > 1 ? { scale: 0.9 } : {}}
               disabled={page === 1 || showSkeleton}
               onClick={() => setPage((prev) => prev - 1)}
-              className="p-3 rounded-full bg-cream_light text-red_dark disabled:opacity-30 border-2 border-red_base shadow-md"
+              className="w-14 h-14 rounded-full bg-red_base text-cream_light disabled:opacity-20 border-2 border-red_light/20 shadow-[0_10px_20px_rgba(0,0,0,0.3)] flex items-center justify-center transition-all hover:border-orange_base/50"
             >
-              <FaChevronLeft size={20} />
+              <FaChevronLeft size={22} />
             </motion.button>
 
-            <span className="text-2xl font-bold text-cream_light font-body bg-red_base px-4 py-1 rounded-md border border-red_light">
-              {page}
-            </span>
+            <motion.div 
+              layout
+              className="relative group"
+            >
+              <div className="absolute inset-0 bg-orange_base blur-lg opacity-20 group-hover:opacity-40 transition-opacity rounded-full " />
+              <div className="relative w-16 h-16 rounded-full bg-orange_base border-2 border-orange_light text-red_dark flex items-center justify-center font-title font-black text-2xl shadow-[0_0_30px_rgba(245,166,35,0.4)]">
+                {page}
+              </div>
+            </motion.div>
 
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={data?.links?.next ? { scale: 1.1, x: 5 } : {}}
+              whileTap={data?.links?.next ? { scale: 0.9 } : {}}
               disabled={!data?.links?.next || showSkeleton}
               onClick={() => setPage((prev) => prev + 1)}
-              className="p-3 rounded-full bg-cream_light text-red_dark disabled:opacity-30 border-2 border-red_base shadow-md"
+              className="w-14 h-14 rounded-full bg-red_base text-cream_light disabled:opacity-20 border-2 border-red_light/20 shadow-[0_10px_20px_rgba(0,0,0,0.3)] flex items-center justify-center transition-all hover:border-orange_base/50"
             >
-              <FaChevronRight size={20} />
+              <FaChevronRight size={22} />
             </motion.button>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

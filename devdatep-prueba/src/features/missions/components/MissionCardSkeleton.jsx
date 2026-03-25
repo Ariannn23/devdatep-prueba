@@ -1,8 +1,9 @@
+import { forwardRef } from "react";
 import Skeleton from "../../../components/ui/Skeleton";
 
-const MissionCardSkeleton = ({ index }) => {
+const MissionCardSkeleton = forwardRef(({ index }, ref) => {
   return (
-    <div className="bg-red_base border-2 border-red_light/20 p-6 rounded-3xl animate-pulse shadow-xl">
+    <div ref={ref} className="bg-red_base border-2 border-red_light/20 p-6 rounded-3xl animate-pulse shadow-xl">
       <div className="flex justify-between items-start mb-6">
         <Skeleton className="h-6 w-20" index={index} />
         <div className="flex gap-2">
@@ -18,6 +19,6 @@ const MissionCardSkeleton = ({ index }) => {
       </div>
     </div>
   );
-};
+});
 
 export default MissionCardSkeleton;
