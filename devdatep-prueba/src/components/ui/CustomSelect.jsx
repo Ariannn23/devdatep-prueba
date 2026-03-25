@@ -45,7 +45,9 @@ const CustomSelect = forwardRef(({ label, icon: Icon, options, value, onChange, 
             }`}
           >
             <span className={value ? 'text-cream_light' : 'text-cream_light/30 italic text-sm'}>
-              {options.find(opt => (opt.id || opt.name || opt.value || opt) === value || (opt.name || opt) === value)?.name || (options.find(opt => (opt.value || opt) === value)?.name || value) || placeholder}
+              {options.find(opt => (opt.value || opt.id || opt.name || opt) === value)?.label || 
+               options.find(opt => (opt.value || opt.id || opt.name || opt) === value)?.name || 
+               value || placeholder}
             </span>
             <FaChevronDown className={`text-orange_base transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -71,8 +73,8 @@ const CustomSelect = forwardRef(({ label, icon: Icon, options, value, onChange, 
                     <p className="text-cream_light/30 text-xs text-center py-4 font-body italic">No hay resultados</p>
                   ) : (
                     filteredOptions.map((opt) => {
-                      const optValue = opt.id || opt.value || opt.name || opt;
-                      const optName = opt.name || opt;
+                      const optValue = opt.value || opt.id || opt.name || opt;
+                      const optName = opt.label || opt.name || opt;
                       const isSelected = value === optValue;
 
                       return (
