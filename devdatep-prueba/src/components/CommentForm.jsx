@@ -1,14 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { FaPaperPlane, FaEdit } from "react-icons/fa";
 import { useEffect } from "react";
-
-const commentSchema = z.object({
-  author: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  text: z.string().min(5, "El comentario debe tener al menos 5 caracteres").max(200, "Máximo 200 caracteres"),
-  rating: z.coerce.number().min(1).max(5),
-});
+import { commentSchema } from "../schemas/commentSchema";
 
 const CommentForm = ({ onSubmit, initialData = null, isEditing = false }) => {
   const {
