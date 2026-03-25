@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import CharacterCard from "../features/characters/components/CharacterCard";
-import CharacterCardSkeleton from "../features/characters/components/CharacterCardSkeleton";
+import CharacterCardSkeleton from "../components/ui/CharacterCardSkeleton";
 import Skeleton from "../components/ui/Skeleton";
 import CharacterFilters from "../features/characters/components/CharacterFilters";
 import useCharacters, {

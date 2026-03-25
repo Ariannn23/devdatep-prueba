@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import Skeleton from "../../../components/ui/Skeleton";
+import Skeleton from "./Skeleton";
 
 const CharacterCardSkeleton = forwardRef(({ index }, ref) => {
   return (

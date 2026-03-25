@@ -3,7 +3,7 @@ import { useAllCharacters } from "../features/characters/hooks/useCharacters";
 import { motion, AnimatePresence } from "framer-motion";
 import MissionForm from "../features/missions/components/MissionForm";
 import MissionCard from "../features/missions/components/MissionCard";
-import MissionCardSkeleton from "../features/missions/components/MissionCardSkeleton";
+import MissionCardSkeleton from "../components/ui/MissionCardSkeleton";
 import Skeleton from "../components/ui/Skeleton";
 import { FaPlus, FaTimes, FaFistRaised, FaChevronLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
