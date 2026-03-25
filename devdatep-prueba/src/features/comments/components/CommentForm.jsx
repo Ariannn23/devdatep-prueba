@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FaPaperPlane, FaEdit } from "react-icons/fa";
+import { FaPaperPlane, FaEdit, FaStar } from "react-icons/fa";
 import { useEffect } from "react";
 import { commentSchema } from "../schemas/commentSchema";
+import CustomSelect from "../../../components/ui/CustomSelect";
 
 const CommentForm = ({ onSubmit, initialData = null, isEditing = false }) => {
   const {
@@ -10,12 +11,15 @@ const CommentForm = ({ onSubmit, initialData = null, isEditing = false }) => {
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    setValue
+    setValue,
+    watch
   } = useForm({
     resolver: zodResolver(commentSchema),
     mode: "onChange",
     defaultValues: initialData || { author: "", text: "", rating: 5 }
   });
+
+  const currentRating = watch("rating");
 
   useEffect(() => {
     if (initialData) {
@@ -30,11 +34,19 @@ const CommentForm = ({ onSubmit, initialData = null, isEditing = false }) => {
     if (!isEditing) reset();
   };
 
+  const ratingOptions = [
+    { value: 5, name: "5 Estrellas" },
+    { value: 4, name: "4 Estrellas" },
+    { value: 3, name: "3 Estrellas" },
+    { value: 2, name: "2 Estrellas" },
+    { value: 1, name: "1 Estrellas" }
+  ];
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="bg-red_dark/30 p-6 rounded-2xl border border-red_light/20 flex flex-col gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
-          <label className="text-cream_light/70 text-sm ml-1">Tu Nombre</label>
+          <label className="text-cream_light/70 text-sm ml-1 font-bold">Tu Nombre</label>
           <input
             {...register("author")}
             placeholder="Ej. Bulma"
@@ -45,17 +57,14 @@ const CommentForm = ({ onSubmit, initialData = null, isEditing = false }) => {
           {errors.author && <span className="text-red-400 text-xs ml-1">{errors.author.message}</span>}
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-cream_light/70 text-sm ml-1">Valoración (1-5)</label>
-          <select
-            {...register("rating")}
-            className="bg-red_dark/40 border-2 border-red_light/30 rounded-xl p-3 text-cream_light font-body focus:outline-none focus:border-orange_base transition-colors"
-          >
-            {[5, 4, 3, 2, 1].map(num => (
-              <option key={num} value={num} className="bg-red_dark">{num} Estrellas</option>
-            ))}
-          </select>
-        </div>
+        <CustomSelect 
+          label="Valoración (1-5)"
+          icon={FaStar}
+          options={ratingOptions}
+          value={currentRating}
+          onChange={(val) => setValue("rating", val, { shouldValidate: true })}
+          placeholder="Selecciona valoración..."
+        />
       </div>
 
       <div className="flex flex-col gap-1">
