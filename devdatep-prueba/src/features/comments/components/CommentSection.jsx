@@ -43,7 +43,6 @@ const CommentSection = ({ characterId }) => {
           )}
         </div>
 
-
         <div className="lg:col-span-3">
           <h3 className="text-xl font-body font-bold text-cream_light mb-4">
             Análisis de la comunidad
@@ -52,6 +51,7 @@ const CommentSection = ({ characterId }) => {
             <AnimatePresence mode="popLayout">
             {comments.length === 0 ? (
               <motion.p 
+                key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-cream_base/50 font-body italic text-center py-10 border-2 border-dashed border-red_light/20 rounded-2xl"
@@ -105,8 +105,8 @@ const CommentSection = ({ characterId }) => {
         </div>
       </div>
     </div>
-  </div>
-);
+    </div>
+  );
 };
 
 export default CommentSection;

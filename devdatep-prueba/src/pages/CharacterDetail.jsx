@@ -2,9 +2,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FaArrowLeft, FaDragon, FaBolt, FaDna, FaVenusMars } from "react-icons/fa";
+import { FaArrowLeft, FaDragon, FaBolt, FaVenusMars } from "react-icons/fa";
 import Skeleton from "../components/ui/Skeleton";
-import CommentSection from "../components/CommentSection";
+import CommentSection from "../features/comments/components/CommentSection";
 
 const CharacterDetail = () => {
   const { id } = useParams();
@@ -68,7 +68,7 @@ const CharacterDetail = () => {
 
           <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col">
             <div className="mb-6">
-              <h1 className="text-5xl md:text-6xl font-title font-bold text-cream_light mb-2 drop-shadow-md">
+              <h1 className="text-5xl md:text-6xl font-title font-black text-cream_light mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] uppercase tracking-tighter">
                 {character.name}
               </h1>
               <div className="flex items-center gap-3 text-cream_dark font-body text-xl italic bg-red_dark/30 self-start px-4 py-1 rounded-full border border-orange_base/20">

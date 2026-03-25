@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCharacters, getAllCharacters } from "../api/characters";
+import { getCharacters, getAllCharacters } from "../../../api/characters";
 
 const useCharacters = (page = 1, name = "") => {
   return useQuery({
@@ -20,6 +20,7 @@ export const useAllRaces = () => {
     },
   });
 };
+
 export const useAllCharacters = () => {
   return useQuery({
     queryKey: ["characters-all"],

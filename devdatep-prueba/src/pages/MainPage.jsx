@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
-import { FaSearch, FaChevronLeft, FaChevronRight, FaTimesCircle } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaTimesCircle,
+  FaFistRaised
+} from "react-icons/fa";
 import { motion } from "framer-motion";
-import CharacterCard from "../components/CharacterCard";
-import CharacterCardSkeleton from "../components/CharacterCardSkeleton";
+import CharacterCard from "../features/characters/components/CharacterCard";
+import CharacterCardSkeleton from "../features/characters/components/CharacterCardSkeleton";
+import Skeleton from "../components/ui/Skeleton";
+import CharacterFilters from "../features/characters/components/CharacterFilters";
 import useCharacters, {
   useAllRaces,
   useAllCharacters,
-} from "../hooks/useCharacters";
-import useCharacterFilters from "../hooks/useCharacterFilters";
+} from "../features/characters/hooks/useCharacters";
+import useCharacterFilters from "../features/characters/hooks/useCharacterFilters";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const [page, setPage] = useState(1);
@@ -15,7 +23,7 @@ const MainPage = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [minLoadDone, setMinLoadDone] = useState(false);
 
-  const { data: allRaces = [] } = useAllRaces();
+  const { data: allRaces = [], isLoading: isLoadingRaces } = useAllRaces();
   const { data: allData } = useAllCharacters();
   const { data, isLoading, isFetching } = useCharacters(page, debouncedSearch);
 
@@ -44,57 +52,57 @@ const MainPage = () => {
     setPage(1);
   };
 
-  const showSkeleton = !debouncedSearch && (isLoading || isFetching || !minLoadDone);
+  const showSkeleton =
+    !debouncedSearch && (isLoading || isFetching || !minLoadDone);
 
   return (
     <div className="min-h-screen bg-red_dark">
       <div className="container mx-auto p-4 flex flex-col min-h-screen">
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
-          className="text-6xl font-title font-semibold text-center mb-6 text-cream_light drop-shadow-lg tracking-wide"
-        >
-          <span
-            className="text-red_base_light"
-            style={{ textShadow: "0 0 2px #d48080" }}
-          >
-            Personajes{" "}
-          </span>
-          <span className="text-orange_base italic">Dragon Ball Z</span>
-        </motion.h1>
+        <div className="flex justify-between items-center mb-10">
+            <h1 className="text-5xl md:text-6xl font-title font-black text-cream_light tracking-tighter drop-shadow-[0_0_15px_rgba(161,74,74,0.5)] flex flex-wrap gap-x-4">
+              <motion.span
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{ 
+                   WebkitTextStroke: "5px #d4ceb8",
+                   paintOrder: "stroke fill"
+                }}
+                className="text-red_base font-black drop-shadow-none"
+              >
+                Personajes
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, x: 50, rotate: -5 }}
+                animate={{ opacity: 1, x: 0, rotate: 0 }}
+                transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 200 }}
+                className="text-orange_base italic drop-shadow-[0_0_20px_rgba(245,166,35,0.6)]"
+              >
+                Dragon Ball Z
+              </motion.span>
+            </h1>
 
-        <div className="flex gap-4 mb-4">
-          <div className="relative flex-1">
-            <FaSearch className="absolute left-3 top-3 text-red_base" />
-            <input
-              type="text"
-              placeholder="Buscar personaje"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full font-body text-red_dark bg-cream_light border-2 rounded-lg pl-10 p-2 focus:outline-none"
-            />
-          </div>
+            {isLoading ? (
+              <Skeleton className="h-12 w-32 rounded-2xl" />
+            ) : (
+              <Link 
+                  to="/missions"
+                  className="flex items-center gap-3 px-6 py-3 bg-red_base border-2 border-red_light/20 rounded-2xl hover:border-orange_base transition-all group hover:scale-105"
+              >
+                  <FaFistRaised className="text-cream_light group-hover:rotate-12 transition-transform" />
+                  <span className="text-cream_light font-bold text-sm tracking-widest uppercase">Misiones</span>
+              </Link>
+            )}
         </div>
 
-        <div className="flex gap-2 flex-wrap mb-6">
-          {allRaces.map((r) => (
-            <motion.button
-              key={r || "todas"}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleRaceChangeWithReset(r)}
-              className={`font-body px-3 py-1 rounded-lg border-2 transition-all 
-                ${
-                  race === r
-                    ? "bg-red_base text-cream_light border-cream_light"
-                    : "bg-cream_light text-red_dark border-red_base"
-                }`}
-            >
-              {r === "" ? "Todas las razas" : r}
-            </motion.button>
-          ))}
-        </div>
+        <CharacterFilters 
+          search={search}
+          setSearch={setSearch}
+          race={race}
+          setRace={handleRaceChangeWithReset}
+          allRaces={allRaces}
+          isLoadingRaces={isLoadingRaces}
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start content-start flex-grow">
           {showSkeleton ? (
@@ -104,23 +112,20 @@ const MainPage = () => {
           ) : characters.length === 0 ? (
             <div className="col-span-4 flex flex-col items-center justify-center py-20 gap-4">
               <FaTimesCircle className="text-red_base text-6xl drop-shadow-lg" />
-                <p className="text-cream_light font-body text-xl text-center">
-                  No se encontraron personajes
-                </p>
-                <p className="text-cream_light/50 font-body text-sm text-center">
-                  Intenta con otro nombre o raza
-                </p>
-              </div>
-            ) : (
-              characters.map((character, index) => (
-                <CharacterCard
-                  key={character.id}
-                  character={character}
-                  index={index}
-                />
-              ))
-            )}
-          </div>
+              <p className="text-cream_light font-body text-xl text-center">
+                No se encontraron personajes
+              </p>
+            </div>
+          ) : (
+            characters.map((character, index) => (
+              <CharacterCard
+                key={character.id}
+                character={character}
+                index={index}
+              />
+            ))
+          )}
+        </div>
 
         {!race && (data?.links?.next || data?.links?.prev) && (
           <div className="flex justify-center items-center gap-6 mt-10 mb-6">
