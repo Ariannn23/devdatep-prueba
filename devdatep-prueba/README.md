@@ -1,13 +1,13 @@
 # Dragon Ball Z - SPA
 
-## Tecnologías 
+## Tecnologías
 
 - **Frontend**: React 18 + Vite.
 - **Estilos**: Tailwind CSS
 - **Estado Global/Caché**: React Query
 - **Validación de Datos**: Zod
 - **Peticiones HTTP**: Axios (Instancias personalizadas para múltiples APIs).
-- **Animaciones**: Framer Motion 
+- **Animaciones**: Framer Motion
 - **Iconografía**: React Icons (Fa Icons).
 
 ## Arquitectura Scalable (Feature-based)
@@ -54,3 +54,17 @@ Relación de datos entre dos fuentes externas:
 1. Descarga las dependencias: `npm install`
 2. Ejecutar el servidor de desarrollo: `npm run dev`
 3. Construir para producción: `npm run build`
+
+## Despliegue Manual (Vercel)
+
+Para desplegar este proyecto de forma manual en **Vercel**:
+
+1. **Subir a GitHub**: Subir el código a un repositorio de GitHub.
+2. **Conectar a Vercel**:
+   - Ve a [Vercel](https://vercel.com/) e inicia sesión.
+   - Haz clic en **"Add New"** > **"Project"**.
+   - Importa tu repositorio de GitHub.
+3. **Configuración**:
+   - Vercel detectará automáticamente que es un proyecto de **Vite**.
+   - Haz clic en **"Deploy"**.
+4. **¡Listo!**: Tu aplicación estará en línea en pocos segundos con una URL pública.
