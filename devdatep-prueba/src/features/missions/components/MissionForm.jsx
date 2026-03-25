@@ -1,11 +1,8 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { missionSchema } from "../schemas/missionSchema";
 import { useEffect, useState, useRef, forwardRef } from "react";
 import { FaGlobeAmericas, FaFistRaised, FaInfoCircle, FaSave, FaChevronDown, FaChevronRight } from "react-icons/fa";
-import { countryService } from "../services/countryService";
 import Skeleton from "../../../components/ui/Skeleton";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMissionForm } from "../hooks/useMissionForm";
 
 const CustomSelect = forwardRef(({ label, icon: Icon, options, value, onChange, placeholder, isLoading, error }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,56 +77,19 @@ const CustomSelect = forwardRef(({ label, icon: Icon, options, value, onChange, 
 });
 
 const MissionForm = ({ onSubmit, characters = [], initialData = null, isEditing = false }) => {
-  const [countries, setCountries] = useState([]);
-  const [loadingCountries, setLoadingCountries] = useState(true);
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
+    errors,
+    isSubmitting,
     setValue,
-    watch
-  } = useForm({
-    resolver: zodResolver(missionSchema),
-    defaultValues: initialData || {
-      title: "",
-      description: "",
-      country: "",
-      assignedCharacter: "",
-      difficulty: "Bajo"
-    }
-  });
-
-  const currentDifficulty = watch("difficulty");
-  const currentCharacter = watch("assignedCharacter");
-  const currentCountry = watch("country");
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const data = await countryService.getAll();
-        const sorted = data.map(c => ({ name: c.name.common })).sort((a, b) => a.name.localeCompare(b.name));
-        setCountries(sorted);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingCountries(false);
-      }
-    };
-    fetchCountries();
-  }, []);
-
-  useEffect(() => {
-    if (initialData) {
-      Object.keys(initialData).forEach(key => setValue(key, initialData[key]));
-    }
-  }, [initialData, setValue]);
-
-  const onFormSubmit = async (data) => {
-    await onSubmit(data);
-    if (!isEditing) reset();
-  };
+    countries,
+    loadingCountries,
+    currentDifficulty,
+    currentCharacter,
+    currentCountry,
+    onFormSubmit,
+  } = useMissionForm({ onSubmit, initialData, isEditing });
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="bg-red_dark p-8 rounded-3xl border-2 border-red_light/20 shadow-2xl space-y-6 text-cream_light">
@@ -160,7 +120,7 @@ const MissionForm = ({ onSubmit, characters = [], initialData = null, isEditing 
         />
 
         <CustomSelect 
-          label="Región de Despliegue"
+          label="País de Despliegue"
           icon={FaGlobeAmericas}
           options={countries}
           value={currentCountry}

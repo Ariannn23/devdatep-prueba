@@ -1,5 +1,3 @@
-import jsonPlaceholderApi from "../../../api/jsonplaceholderApi";
-
 const STORAGE_KEY = "dbz_missions_cache";
 
 const getLocalMissions = () => {
@@ -13,21 +11,7 @@ const saveLocalMissions = (missions) => {
 
 export const missionService = {
   getAll: async () => {
-    const local = getLocalMissions();
-    if (local) return local;
-
-    const response = await jsonPlaceholderApi.get("/posts?_limit=6");
-    const initialMissions = response.data.map((item) => ({
-      id: item.id,
-      title: item.title.substring(0, 20),
-      description: item.body,
-      assignedCharacter: "Goku", 
-      country: "Japón",          
-      difficulty: "Bajo",        
-    }));
-    
-    saveLocalMissions(initialMissions);
-    return initialMissions;
+    return getLocalMissions() || [];
   },
 
   create: async (missionData) => {

@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { missionService } from "../features/missions/services/missionService";
+import { useMissionsDashboard } from "../features/missions/hooks/useMissionsDashboard";
+import { useAllCharacters } from "../features/characters/hooks/useCharacters";
 import { motion, AnimatePresence } from "framer-motion";
 import MissionForm from "../features/missions/components/MissionForm";
 import MissionCard from "../features/missions/components/MissionCard";
@@ -9,51 +8,21 @@ import Skeleton from "../components/ui/Skeleton";
 import { FaPlus, FaTimes, FaFistRaised, FaChevronLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-import useCharacters, { useAllCharacters } from "../features/characters/hooks/useCharacters";
-
 const MissionsPage = () => {
-  const queryClient = useQueryClient();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingMission, setEditingMission] = useState(null);
-  const isFirstMount = useRef(true);
-
-  useEffect(() => {
-    isFirstMount.current = false;
-  }, []);
-
-  const { data: missions = [], isLoading } = useQuery({
-    queryKey: ["missions"],
-    queryFn: missionService.getAll,
-    staleTime: 1000 * 60 * 5 // 5 min cache
-  });
+  const {
+    missions,
+    isLoading,
+    isFormOpen,
+    editingMission,
+    isFirstMount,
+    mutation,
+    deleteMutation,
+    handleEdit,
+    toggleForm,
+  } = useMissionsDashboard();
 
   const { data: allCharacters } = useAllCharacters();
   const characters = allCharacters?.items || [];
-
-  const mutation = useMutation({
-    mutationFn: (data) => 
-      editingMission 
-        ? missionService.update(editingMission.id, data) 
-        : missionService.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["missions"] });
-      setIsFormOpen(false);
-      setEditingMission(null);
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: missionService.delete,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["missions"] });
-    }
-  });
-
-  const handleEdit = (mission) => {
-    setEditingMission(mission);
-    setIsFormOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <motion.div 
@@ -76,10 +45,7 @@ const MissionsPage = () => {
             <Skeleton className="h-12 w-40 rounded-xl" />
           ) : (
             <button 
-              onClick={() => {
-                setEditingMission(null);
-                setIsFormOpen(!isFormOpen);
-              }}
+              onClick={toggleForm}
               className="px-6 py-3 bg-cream_light text-red_dark rounded-xl font-bold flex items-center gap-2 hover:bg-orange_light transition-all shadow-lg active:scale-95 z-10"
             >
               {isFormOpen ? <FaTimes /> : <FaPlus />}
