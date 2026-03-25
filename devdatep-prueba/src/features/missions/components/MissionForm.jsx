@@ -39,7 +39,7 @@ const MissionForm = ({ onSubmit, characters = [], initialData = null, isEditing 
         <CustomSelect 
           label="Guerrero Asignado"
           icon={FaFistRaised}
-          options={characters}
+          options={characters.map(c => ({ ...c, id: c.name }))}
           value={currentCharacter}
           onChange={(val) => setValue("assignedCharacter", val, { shouldValidate: true })}
           placeholder="Selecciona un guerrero..."
