@@ -8,9 +8,9 @@
 - **Validación de Datos**: Zod
 - **Peticiones HTTP**: Axios (Instancias personalizadas para múltiples APIs).
 - **Animaciones**: Framer Motion
-- **Iconografía**: React Icons (Fa Icons).
+- **Iconografía**: React Icons
 
-## Arquitectura Scalable (Feature-based)
+## Arquitectura Scalable
 
 El proyecto está organizado por "Features" para maximizar la mantenibilidad:
 
@@ -21,9 +21,9 @@ El proyecto está organizado por "Features" para maximizar la mantenibilidad:
 - `src/hooks`: Lógica reutilizable y hooks personalizados.
 - `src/components/ui`: Componentes atómicos (Skeletons, CustomSelects).
 
-## Implementación Nivel 3 (Avanzado)
+## Implementación Nivel 3 
 
-### 1. CRUD Completo de Entidad (Misiones)
+### 1. CRUD Completo de Entidad 
 
 - **Crear**: Formulario dinámico con validación en tiempo real.
 - **Listar**: Vista en grid con estados de skeleton y animaciones de entrada.
